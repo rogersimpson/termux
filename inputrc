@@ -1,0 +1,63 @@
+#-------------------------------------------------------
+# Use `bind -v` to see current settings
+#-------------------------------------------------------
+
+# INPUTRC=~/.inputrc
+
+# Adding this to your /etc/inputrc or ~/.inputrc will result in a character
+# # being appended to any file-names returned by completion, in much the same
+# # way as ls -F works.
+set visible-stats on
+set blink-matching-paren on
+set bell-style visible
+
+set convert-meta off
+set input-meta on
+set output-meta on
+set show-mode-in-prompt on
+
+# https://unix.stackexchange.com/questions/112406/how-do-i-switch-to-vi-editing-mode-in-readline
+set vi-ins-mode-string (ins)\1\e[5 q\2
+set vi-cmd-mode-string (cmd)\1\e[1 q\2
+## to change to vi mode:   set -o vi | set -o emacs
+
+set skip-completed-text on
+
+$if Bash
+    # Search history back and forward using page-up and page-down
+    "\e[5~": history-search-backward
+    "\e[6~": history-search-forward
+    # Cycle through ambiguous completions instead of list (option bellow)
+    "\C-i": menu-complete
+    # Binding Shift-Tab to go backward is a little tricker:
+    "\e[Z": "\e-1\C-i"
+    # control-x-p to edit path
+    "\C-xp": "PATH=${PATH}\e\C-e\C-a\ef\C-f"
+    # prepare to type a quoted word -- insert open and close double quotes
+    # and move to just after the open quote
+    "\C-x\"": "\"\"\C-b"
+    "\C-x'": "''\C-b"
+    # insert option macro (if you forgot option in previous cmd type Alt-o)
+    "\eo": "\C-p\C-a\ef "
+    # show help for a commad with alt-h
+    "\eh": "\C-a\eb\ed\C-y\e#man \C-y\C-m\C-p\C-p\C-a\C-d\C-e"
+    # Completion
+    set match-hidden-files off
+    set completion-query-items 350
+    set completion-ignore-case on
+    set show-all-if-ambiguous on
+    set show-all-if-unmodified  on
+    set page-completions off
+    set visible-stats on
+    set completion-map-case on
+    # do history expansion when space entered
+    #Space: magic-space
+$endif
+$include /etc/inputrc
+
+$if exists("&wildignorecase")
+    set wildignorecase
+$endif
+
+# put in your ~/.bashrc
+# complete -d cd mkdir rmdir
